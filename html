@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>awaredads - Out-of-Home Advertising Marketplace</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            @apply bg-gray-50 text-gray-800;
+        }
+
+        /* Custom keyframes for a gentle pulse effect */
+        @keyframes pulse-btn {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .animate-pulse-btn {
+            animation: pulse-btn 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* Custom animation for the message box */
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fade-in 0.3s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <!-- Main container for the entire page -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <!-- Navigation Bar -->
+        <nav class="flex items-center justify-between py-6">
+            <div class="text-2xl font-bold text-blue-600">
+                awaredads
+            </div>
+            <div class="space-x-4 flex items-center">
+                <a href="#marketplace" class="text-gray-600 hover:text-blue-600 transition-colors">Marketplace</a>
+                <a href="#contact" class="text-gray-600 hover:text-blue-600 transition-colors">Contact</a>
+                <button id="cta-brand-proposals-button" class="bg-blue-600 text-white font-medium py-2 px-4 rounded-full shadow-lg hover:bg-blue-700 transition-colors duration-300">
+                    Submit a Proposal
+                </button>
+                <button id="login-button" class="bg-blue-50 text-blue-600 font-medium py-2 px-4 rounded-full hover:bg-blue-100 transition-colors duration-300">
+                    Log In
+                </button>
+                <button id="logout-button" class="bg-red-50 text-red-600 font-medium py-2 px-4 rounded-full hover:bg-red-100 transition-colors duration-300 hidden">
+                    Log Out
+                </button>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <header class="py-16 sm:py-24 text-center">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight">
+                Monetize Your Space. Capture an Audience.
+            </h1>
+            <p class="mt-4 text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto">
+                Turn your home, office, or public space into a powerful advertising medium. We connect space owners with top brands for impactful out-of-home campaigns.
+            </p>
+            <div class="mt-8 flex justify-center space-x-4">
+                <button id="list-space-cta" class="bg-blue-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 flex items-center space-x-2 animate-pulse-btn">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    <span>List Your Space</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- User Dashboard Section (hidden by default) -->
+        <section id="user-dashboard" class="py-12 sm:py-16 hidden">
+            <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-10">
+                Your Ad Spaces Dashboard
+            </h2>
+            <div class="flex flex-col md:flex-row gap-8">
+                <!-- Add New Space Form -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 w-full md:w-1/3">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Add a New Ad Space</h3>
+                    <form id="add-space-form" class="space-y-4">
+                        <div>
+                            <label for="spaceName" class="block text-sm font-medium text-gray-700">Space Name</label>
+                            <input type="text" id="spaceName" name="spaceName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        </div>
+                        <div>
+                            <label for="spaceDescription" class="block text-sm font-medium text-gray-700">Description</label>
+                            <textarea id="spaceDescription" name="spaceDescription" rows="2" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"></textarea>
+                        </div>
+                        <div>
+                            <label for="spacePrice" class="block text-sm font-medium text-gray-700">Price ($/mo)</label>
+                            <input type="number" id="spacePrice" name="spacePrice" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300">
+                            Add Space
+                        </button>
+                    </form>
+                </div>
+                <!-- My Listed Ad Spaces -->
+                <div class="w-full md:w-2/3">
+                    <div id="my-ad-spaces" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <!-- User's ad spaces will be dynamically added here -->
+                        <div id="no-spaces-message" class="bg-blue-50 text-blue-700 p-4 rounded-lg text-center font-medium">
+                            You have not listed any ad spaces yet.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ad Spaces Marketplace Section -->
+        <main id="marketplace" class="py-12 sm:py-16">
+            <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-10">
+                Explore Our Ad Spaces
+            </h2>
+            <div class="mb-8 max-w-md mx-auto">
+                <input type="text" id="marketplace-search" placeholder="Search for spaces..." class="w-full px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow">
+            </div>
+            <div id="marketplace-spaces" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Ad Card 1 -->
+                <div class="ad-card bg-white rounded-2xl shadow-lg p-6 group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+                    <h3 class="text-xl font-bold text-gray-900">High-Traffic Urban Billboard</h3>
+                    <p class="mt-2 text-gray-500 text-sm">
+                        Located in the heart of the city, this billboard offers maximum visibility to commuters and pedestrians. Perfect for broad brand reach.
+                    </p>
+                    <div class="mt-6 flex justify-between items-center">
+                        <span class="text-2xl font-bold text-blue-600">$5,000<span class="text-base font-normal text-gray-400">/mo</span></span>
+                        <button class="cta-interactive bg-blue-50 text-blue-600 font-medium py-2 px-6 rounded-full hover:bg-blue-100 transition-colors duration-300">
+                            View Details
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ad Card 2 -->
+                <div class="ad-card bg-white rounded-2xl shadow-lg p-6 group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+                    <h3 class="text-xl font-bold text-gray-900">University Campus Kiosk</h3>
+                    <p class="mt-2 text-gray-500 text-sm">
+                        Target the student market with this digital ad space in a bustling university food court. Ideal for tech, education, and lifestyle brands.
+                    </p>
+                    <div class="mt-6 flex justify-between items-center">
+                        <span class="text-2xl font-bold text-blue-600">$2,500<span class="text-base font-normal text-gray-400">/mo</span></span>
+                        <button class="cta-interactive bg-blue-50 text-blue-600 font-medium py-2 px-6 rounded-full hover:bg-blue-100 transition-colors duration-300">
+                            View Details
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ad Card 3 -->
+                <div class="ad-card bg-white rounded-2xl shadow-lg p-6 group transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+                    <h3 class="text-xl font-bold text-gray-900">Residential Building Lobby Screen</h3>
+                    <p class="mt-2 text-gray-500 text-sm">
+                        Engage a captive audience with a high-definition screen in a luxury apartment complex lobby. Perfect for local services and premium products.
+                    </p>
+                    <div class="mt-6 flex justify-between items-center">
+                        <span class="text-2xl font-bold text-blue-600">$1,800<span class="text-base font-normal text-gray-400">/mo</span></span>
+                        <button class="cta-interactive bg-blue-50 text-blue-600 font-medium py-2 px-6 rounded-full hover:bg-blue-100 transition-colors duration-300">
+                            View Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="py-8 text-center text-gray-400 text-sm">
+            &copy; 2024 awaredads. All rights reserved.
+        </footer>
+
+        <!-- Brand Proposals Interface (Hidden by default) -->
+        <div id="brand-proposals-interface" class="fixed inset-0 z-50 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 hidden">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-8 relative">
+                <button id="close-proposals-button" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <h2 class="text-3xl font-bold text-gray-900 text-center mb-6">
+                    Submit Your Brand Campaign Proposal
+                </h2>
+                <p class="text-center text-gray-500 mb-8">
+                    Tell us about your campaign goals, target audience, and budget, and we'll help you find the perfect ad spaces.
+                </p>
+                <!-- Proposal Form -->
+                <form class="space-y-6">
+                    <div>
+                        <label for="brandName" class="block text-sm font-medium text-gray-700">Brand Name</label>
+                        <input type="text" id="brandName" name="brandName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label for="campaignName" class="block text-sm font-medium text-gray-700">Campaign Title</label>
+                        <input type="text" id="campaignName" name="campaignName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700">Campaign Description</label>
+                        <textarea id="description" name="description" rows="4" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"></textarea>
+                    </div>
+                    <div>
+                        <label for="budget" class="block text-sm font-medium text-gray-700">Budget Range</label>
+                        <select id="budget" name="budget" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option value="">Select a range</option>
+                            <option value="5000-10000">$5,000 - $10,000</option>
+                            <option value="10000-25000">$10,000 - $25,000</option>
+                            <option value="25000-50000">$25,000 - $50,000</option>
+                            <option value="50000+">$50,000+</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-center">
+                        <button type="submit" class="bg-blue-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50">
+                            Submit Proposal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Custom Message Box -->
+        <div id="message-box" class="fixed inset-0 z-[100] bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 hidden">
+            <div class="bg-white rounded-lg shadow-2xl p-6 max-w-sm w-full animate-fade-in">
+                <p class="text-center font-semibold text-gray-800" id="message-text">Message content here.</p>
+                <div class="mt-4 text-center">
+                    <button id="close-message-box" class="bg-blue-600 text-white font-medium py-2 px-6 rounded-full hover:bg-blue-700 transition-colors duration-300">
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <!-- JavaScript for dynamic behavior -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- User Authentication and Dashboard ---
+            const loginButton = document.getElementById('login-button');
+            const logoutButton = document.getElementById('logout-button');
+            const dashboardSection = document.getElementById('user-dashboard');
+            const marketplaceSection = document.getElementById('marketplace');
+            const listSpaceCta = document.getElementById('list-space-cta');
+            let isLoggedIn = false;
+
+            const myAdSpacesContainer = document.getElementById('my-ad-spaces');
+            const noSpacesMessage = document.getElementById('no-spaces-message');
+            const addSpaceForm = document.getElementById('add-space-form');
+
+            // Sample data for the user's listed spaces
+            let userSpaces = [];
+
+            const renderUserSpaces = () => {
+                myAdSpacesContainer.innerHTML = ''; // Clear existing content
+                if (userSpaces.length === 0) {
+                    noSpacesMessage.classList.remove('hidden');
+                    myAdSpacesContainer.appendChild(noSpacesMessage);
+                } else {
+                    noSpacesMessage.classList.add('hidden');
+                    userSpaces.forEach(space => {
+                        const card = document.createElement('div');
+                        card.className = 'bg-white rounded-2xl shadow-lg p-6 flex flex-col justify-between';
+                        card.innerHTML = `
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-900">${space.name}</h3>
+                                <p class="mt-2 text-gray-500 text-sm">${space.description}</p>
+                            </div>
+                            <div class="mt-6 flex justify-between items-center">
+                                <span class="text-2xl font-bold text-blue-600">$${space.price}<span class="text-base font-normal text-gray-400">/mo</span></span>
+                                <button data-id="${space.id}" class="delete-space-button bg-red-50 text-red-600 font-medium py-2 px-6 rounded-full hover:bg-red-100 transition-colors duration-300">
+                                    Delete
+                                </button>
+                            </div>
+                        `;
+                        myAdSpacesContainer.appendChild(card);
+                    });
+                }
+            };
+
+            const toggleLoginState = () => {
+                isLoggedIn = !isLoggedIn;
+                if (isLoggedIn) {
+                    loginButton.classList.add('hidden');
+                    logoutButton.classList.remove('hidden');
+                    dashboardSection.classList.remove('hidden');
+                    marketplaceSection.classList.add('hidden');
+                    renderUserSpaces();
+                } else {
+                    loginButton.classList.remove('hidden');
+                    logoutButton.classList.add('hidden');
+                    dashboardSection.classList.add('hidden');
+                    marketplaceSection.classList.remove('hidden');
+                }
+            };
+
+            loginButton.addEventListener('click', toggleLoginState);
+            logoutButton.addEventListener('click', toggleLoginState);
+
+            listSpaceCta.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (!isLoggedIn) {
+                    showMessageBox('Please log in to list your space.');
+                }
+                toggleLoginState();
+            });
+            
+            // Handle adding a new space
+            addSpaceForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('spaceName').value;
+                const description = document.getElementById('spaceDescription').value;
+                const price = document.getElementById('spacePrice').value;
+                
+                const newSpace = {
+                    id: Date.now(), // Unique ID for the space
+                    name,
+                    description,
+                    price
+                };
+                
+                userSpaces.push(newSpace);
+                renderUserSpaces();
+                addSpaceForm.reset();
+            });
+
+            // Handle deleting a space
+            myAdSpacesContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-space-button')) {
+                    const idToDelete = parseInt(e.target.dataset.id);
+                    userSpaces = userSpaces.filter(space => space.id !== idToDelete);
+                    renderUserSpaces();
+                }
+            });
+
+            // --- Brand Proposals Modal ---
+            const proposalsButton = document.getElementById('cta-brand-proposals-button');
+            const proposalsInterface = document.getElementById('brand-proposals-interface');
+            const closeButton = document.getElementById('close-proposals-button');
+
+            proposalsButton.addEventListener('click', () => {
+                proposalsInterface.classList.remove('hidden');
+            });
+            
+            closeButton.addEventListener('click', () => {
+                proposalsInterface.classList.add('hidden');
+            });
+
+            proposalsInterface.addEventListener('click', (e) => {
+                if (e.target === proposalsInterface) {
+                    proposalsInterface.classList.add('hidden');
+                }
+            });
+
+            // --- Marketplace Search Filter ---
+            const marketplaceSearch = document.getElementById('marketplace-search');
+            const marketplaceSpaces = document.querySelectorAll('.ad-card');
+
+            marketplaceSearch.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                marketplaceSpaces.forEach(card => {
+                    const textContent = card.textContent.toLowerCase();
+                    if (textContent.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+
+            // --- Message Box Functionality ---
+            const messageBox = document.getElementById('message-box');
+            const messageText = document.getElementById('message-text');
+            const closeMessageBoxButton = document.getElementById('close-message-box');
+
+            function showMessageBox(message) {
+                messageText.textContent = message;
+                messageBox.classList.remove('hidden');
+            }
+
+            closeMessageBoxButton.addEventListener('click', () => {
+                messageBox.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
